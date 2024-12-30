@@ -18,6 +18,12 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.jetpackcompose.data.ForecastItem
 import com.example.jetpackcompose.ui.views.convertUnixToTime
 
+/**
+ * A composable that displays a weather forecast card for a specific forecast item.
+ * The card includes the weather icon, date/time, temperature, and weather description.
+ *
+ * @param forecastItem The [ForecastItem] containing the forecast data to be displayed.
+ */
 @Composable
 fun WeatherCard(forecastItem: ForecastItem) {
     Row(

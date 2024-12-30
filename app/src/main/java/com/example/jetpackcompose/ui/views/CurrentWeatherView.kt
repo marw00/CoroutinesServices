@@ -23,6 +23,13 @@ import java.util.Locale
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jetpackcompose.ui.components.SearchBarSample
 
+/**
+ * Composable function to display the current weather view, including the weather data,
+ * an image of the weather icon, and other relevant weather information.
+ *
+ * @param currentWeather The current weather data to be displayed.
+ * @param iconUrl The URL of the weather icon to be displayed.
+ */
 @Composable
 fun CurrentWeatherView(currentWeather: WeatherData?, iconUrl: String?) {
 
@@ -36,6 +43,7 @@ fun CurrentWeatherView(currentWeather: WeatherData?, iconUrl: String?) {
 
     val context = LocalContext.current
 
+    // Fetch weather data from preferences and API on launch
     LaunchedEffect(Unit) {
         context.dataStore.data.collect { preferences ->
             hometown = preferences[Keys.HOMETOWN_KEY] ?: ""
@@ -48,6 +56,7 @@ fun CurrentWeatherView(currentWeather: WeatherData?, iconUrl: String?) {
 
     val searchQuery = rememberSaveable { mutableStateOf("") }
 
+    // Search bar for entering a city name
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -65,6 +74,7 @@ fun CurrentWeatherView(currentWeather: WeatherData?, iconUrl: String?) {
         )
     }
 
+    // Error message display
     errorMessage?.let {
         Text(
             text = it,
@@ -77,6 +87,7 @@ fun CurrentWeatherView(currentWeather: WeatherData?, iconUrl: String?) {
         )
     }
 
+    // Display current weather data if available
     if (searchQuery.value.isNotEmpty() || hometown.isNotEmpty()) {
         currentWeather?.let {
             Column(
@@ -111,6 +122,7 @@ fun CurrentWeatherView(currentWeather: WeatherData?, iconUrl: String?) {
                     }
                 }
 
+                // Function to create a row displaying weather information
                 @Composable
                 fun createWeatherInfoRow(label: String, value: String) {
                     Row(
@@ -149,6 +161,7 @@ fun CurrentWeatherView(currentWeather: WeatherData?, iconUrl: String?) {
                     }
                 }
 
+                // Display weather information
                 createWeatherInfoRow("Description:", it.weather[0].description)
                 Spacer(modifier = Modifier.height(8.dp))
                 createWeatherInfoRow("Temp.:", "${it.main.temp}°C")
@@ -160,6 +173,7 @@ fun CurrentWeatherView(currentWeather: WeatherData?, iconUrl: String?) {
                 createWeatherInfoRow("Wind:", "${it.wind.speed} m/s")
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // Convert and display sunrise and sunset times
                 val sunriseTime = convertUnixToTime(it.sys.sunrise)
                 val sunsetTime = convertUnixToTime(it.sys.sunset)
 
@@ -185,6 +199,12 @@ fun CurrentWeatherView(currentWeather: WeatherData?, iconUrl: String?) {
     }
 }
 
+/**
+ * Converts a Unix timestamp to a human-readable time string in the format "HH:mm".
+ *
+ * @param timestamp The Unix timestamp to convert.
+ * @return The formatted time string.
+ */
 fun convertUnixToTime(timestamp: Long): String {
     val date = Date(timestamp * 1000)
     val format = SimpleDateFormat("HH:mm", Locale.getDefault())

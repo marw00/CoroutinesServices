@@ -1,0 +1,23 @@
+#A:
+Coroutines make async tasks easier and cleaner in Android.
+They keep the main thread free, so the app stays smooth.
+Also, they're less error-prone than callbacks and
+make the code easier to read and maintain.
+
+#B:
+I chose IO because it’s perfect for tasks like API calls or database operations.
+It runs these tasks on background threads, keeping the main thread responsive.
+
+#C:
+1.Music Player: Keeps music playing even when the app is closed.
+2.Location Tracking: Tracks GPS in the background, like for fitness apps.
+
+#D:
+Combining Services and Coroutines is efficient for long-running background tasks.
+In the weather app, the `PopupService` uses a Coroutine in the `initializeTimerFromSettings` method.
+This method fetches user settings asynchronously using a CoroutineScope with `Dispatchers.IO`,
+ensuring that the main thread remains free for UI updates.
+The coroutine retrieves the timer option from the `DataStore` and starts the notification logic if required.
+This combination avoids blocking the UI and ensures the service can run efficiently.
+
+

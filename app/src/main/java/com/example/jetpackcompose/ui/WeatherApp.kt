@@ -13,18 +13,32 @@ import com.example.jetpackcompose.ui.views.CurrentWeatherView
 import com.example.jetpackcompose.ui.views.ForecastWeatherView
 import com.example.jetpackcompose.ui.views.SettingsView
 
+/**
+ * Main Composable for the Weather App.
+ *
+ * This function manages the app's primary interface, including current weather,
+ * weather forecasts, and settings. It dynamically switches between these views
+ * based on the selection in the bottom navigation bar.
+ *
+ * @param viewModel The [WeatherViewModel] that provides weather data.
+ */
 @Composable
 fun WeatherApp(viewModel: WeatherViewModel) {
+    // States for weather data and the currently selected navigation item
     val currentWeather by viewModel.currentWeather.collectAsState()
     val forecast by viewModel.forecast.collectAsState()
     val iconUrl by viewModel.iconUrl.collectAsState()
 
+    // State for the currently selected bottom navigation item
     var selectedItem by remember { mutableStateOf(0) }
 
+    // Colors for the upper and lower halves of the app
     val upperHalfColor = Color.White
     val lowerHalfColor = Color(0xFF1E88E5)
 
+    // Main layout of the app
     Box(modifier = Modifier.fillMaxSize()) {
+        // Background colors for the upper and lower halves
         Column(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
@@ -40,6 +54,7 @@ fun WeatherApp(viewModel: WeatherViewModel) {
             )
         }
 
+        // Content of the app
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -54,6 +69,7 @@ fun WeatherApp(viewModel: WeatherViewModel) {
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Display based on the selected navigation option
                 when (selectedItem) {
                     0 -> CurrentWeatherView(currentWeather = currentWeather, iconUrl = iconUrl)
                     1 -> ForecastWeatherView(forecast = forecast)
@@ -61,6 +77,7 @@ fun WeatherApp(viewModel: WeatherViewModel) {
                 }
             }
 
+            // Bottom navigation bar at the bottom of the app
             BottomNavBar(
                 selectedItem = selectedItem,
                 onItemSelected = { selectedItem = it },

@@ -17,7 +17,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jetpackcompose.viewmodel.WeatherViewModel
 import com.example.jetpackcompose.ui.components.SearchBarSample
 import com.example.jetpackcompose.ui.components.WeatherCard
+import androidx.compose.foundation.lazy.items
 
+/**
+ * A composable function to display the weather forecast.
+ *
+ * This composable shows the weather forecast for a city. It includes a search bar for querying a city's forecast,
+ * displays an error message if there's any issue with the data, and shows a list of forecast data cards.
+ *
+ * @param forecast A list of [ForecastItem] representing the weather forecast data.
+ */
 @Composable
 fun ForecastWeatherView(forecast: List<ForecastItem>) {
     val context = LocalContext.current
@@ -103,29 +112,25 @@ fun ForecastWeatherView(forecast: List<ForecastItem>) {
                     .align(Alignment.CenterHorizontally)
             )
 
-            // Display forecast data
+            // Display forecast data using WeatherCard
             LazyColumn(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                ////////////////////////////////////
-
-                //TODO Zeige die Wettervorhersage in dieser Liste an (nutze die WeatherCard Komponente)
-                // Der Text unten darf entfernt werden.
-
-                ////////////////////////////////////
+                items(forecast) { forecastItem ->
+                    WeatherCard(forecastItem = forecastItem)
+                }
             }
 
+        } else {
+            Text(
+                text = "No forecast data available.",
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 24.sp,
+                    color = Color.Gray
+                ),
+                modifier = Modifier.padding(16.dp)
+            )
         }
-
-        Text(
-            text = "TODO: Implement me :)",
-            style = MaterialTheme.typography.headlineLarge.copy(
-                fontSize = 18.sp,
-                color = Color.Black
-            ),
-            modifier = Modifier
-                .padding(bottom = 32.dp)
-                .align(Alignment.CenterHorizontally)
-        )
     }
 }

@@ -7,17 +7,22 @@ import androidx.activity.compose.setContent
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jetpackcompose.viewmodel.WeatherViewModel
 import com.example.jetpackcompose.ui.WeatherApp
-import com.example.jetpackcompose.viewmodel.PopupServiceManager
+import com.example.jetpackcompose.service.PopupServiceManager
 
+/**
+ * This activity sets up the Jetpack Compose content, initializes the weather view model,
+ * and manages the popup service based on the Android version.
+ */
 class MainActivity : ComponentActivity() {
-
     private val popupServiceManager = PopupServiceManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //handlePopupService()      // Todo Uncomment this line
+        // Handle popup service based on the Android version
+        handlePopupService()
 
+        // Set the Jetpack Compose content
         setContent {
             val viewModel: WeatherViewModel = viewModel()
             WeatherApp(viewModel)

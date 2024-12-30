@@ -13,6 +13,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 
+/**
+ * A customizable bottom navigation bar with three navigation items.
+ * It allows the user to navigate between different sections of the app.
+ *
+ * @param selectedItem The index of the currently selected navigation item.
+ * @param onItemSelected A callback that is triggered when a navigation item is selected.
+ * @param modifier Modifier to be applied to the bottom navigation bar.
+ * @param backgroundColor The background color of the bottom navigation bar.
+ * @param selectedTintColor The color to apply to the icon and label when the item is selected.
+ * @param unselectedTintColor The color to apply to the icon and label when the item is not selected.
+ */
 @Composable
 fun BottomNavBar(
     selectedItem: Int,
@@ -47,6 +58,15 @@ fun BottomNavBar(
     }
 }
 
+/**
+ * A helper composable to display a navigation icon with a dynamic tint color.
+ * The tint color changes based on whether the icon is selected or not.
+ *
+ * @param icon The image vector to display as the icon.
+ * @param isSelected A boolean value indicating if the icon is selected.
+ * @param selectedTintColor The color to apply to the icon when it is selected.
+ * @param unselectedTintColor The color to apply to the icon when it is not selected.
+ */
 @Composable
 fun NavigationIcon(
     icon: ImageVector,

@@ -23,6 +23,16 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jetpackcompose.viewmodel.WeatherViewModel
 
+/**
+ * A composable that displays a search bar with recent search suggestions.
+ * The search bar allows the user to enter a city name, and upon submission,
+ * fetches weather or forecast data based on the selected menu (Home or Forecast).
+ *
+ * @param weatherViewModel The [WeatherViewModel] responsible for managing weather data.
+ * @param selectedMenu The menu item currently selected ("Home" or "Forecast").
+ * @param apiKey The API key used for fetching weather data.
+ * @param onQueryChanged A callback that is invoked when the query changes in the search bar.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBarSample(

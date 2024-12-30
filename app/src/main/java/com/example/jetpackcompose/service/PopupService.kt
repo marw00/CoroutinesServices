@@ -17,6 +17,9 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
+/**
+ * A service that runs in the foreground to send periodic popup notifications based on user settings.
+ */
 class PopupService : Service() {
 
     private val handler = Handler(Looper.getMainLooper())
@@ -26,6 +29,9 @@ class PopupService : Service() {
     private var isNotificationEnabled: Boolean = false
 
     private val updateReceiver = object : BroadcastReceiver() {
+        /**
+         * Receives updates for timer options and updates the notification interval.
+         */
         override fun onReceive(context: Context?, intent: Intent?) {
             val newTimerOption = intent?.getStringExtra("timer_option") ?: "Deactivated"
             updateTimerOption(newTimerOption)
@@ -35,17 +41,17 @@ class PopupService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
-
-
-        ////////////////////////////////////
-
-        //TODO starte den Service hier
-
-        ////////////////////////////////////
-
-
+        startForegroundService()
         registerUpdateReceiver()
         initializeTimerFromSettings()
+    }
+
+    /**
+     * Starts the foreground service with a persistent notification.
+     */
+    private fun startForegroundService() {
+        val notification = getNotification("Popup Service is running")
+        startForeground(1, notification)
     }
 
     override fun onDestroy() {
@@ -64,6 +70,9 @@ class PopupService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? = null
 
+    /**
+     * A runnable task that periodically sends notifications.
+     */
     private val showNotificationRunnable = object : Runnable {
         override fun run() {
             if (isNotificationEnabled) {
@@ -74,6 +83,9 @@ class PopupService : Service() {
         }
     }
 
+    /**
+     * Updates the timer option for notifications and starts or stops the service accordingly.
+     */
     private fun updateTimerOption(option: String) {
         delayMillis = timerOptionToMillis(option)
         isNotificationEnabled = delayMillis != -1L
@@ -86,15 +98,19 @@ class PopupService : Service() {
         }
     }
 
+    /**
+     * Fetches the saved timer option from the DataStore.
+     */
     private suspend fun fetchTimerOptionFromSettings(): String {
         val key = stringPreferencesKey("timer_option_key")
-        val timerOption = dataStore.data.map { preferences ->
+        return dataStore.data.map { preferences ->
             preferences[key] ?: "Deactivated"
         }.first()
-
-        return timerOption
     }
 
+    /**
+     * Registers a receiver for updates to the timer option.
+     */
     private fun registerUpdateReceiver() {
         ContextCompat.registerReceiver(
             this,
@@ -104,7 +120,9 @@ class PopupService : Service() {
         )
     }
 
-
+    /**
+     * Converts a timer option string to milliseconds.
+     */
     private fun timerOptionToMillis(option: String): Long {
         return when (option) {
             "10s" -> 10_000L
@@ -116,6 +134,9 @@ class PopupService : Service() {
         }
     }
 
+    /**
+     * Initializes the timer option from settings and starts notifications if enabled.
+     */
     private fun initializeTimerFromSettings() {
         CoroutineScope(Dispatchers.IO).launch {
             val timerOption = fetchTimerOptionFromSettings()
@@ -128,7 +149,11 @@ class PopupService : Service() {
         }
     }
 
-
+    /**
+     * Sends a notification with the given message.
+     *
+     * @param message The message to display in the notification.
+     */
     private fun sendNotification(message: String) {
         if (ActivityCompat.checkSelfPermission(
                 this@PopupService,
@@ -143,6 +168,12 @@ class PopupService : Service() {
         notificationManager.notify(1, notification)
     }
 
+    /**
+     * Creates a notification with the specified content.
+     *
+     * @param contentText The content text to display in the notification.
+     * @return A [Notification] object.
+     */
     private fun getNotification(contentText: String): Notification {
         val intent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
@@ -163,6 +194,9 @@ class PopupService : Service() {
             .build()
     }
 
+    /**
+     * Creates a notification channel for the service.
+     */
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
